@@ -656,6 +656,23 @@ justify-content: center;
 
 					<div style="display: flex; align-items: center; background-color: #edf6f9; border-radius: 8px; padding-left: 5px;">
 						<input type="text" placeholder="Type your message ..." style="width: 100%; border: none; outline: none; font-size: 14px; background-color: transparent; color: #333;" id="chatbot-input-id">
+						<button onclick="(function(){
+							const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+							recognition.start();
+							
+							recognition.onresult = function(event){
+								const prompt = event.results[0][0].transcript;  // Get the transcript of the speech
+								console.log('Recognized Speech:', prompt);
+						
+								// Call the function to generate the image based on the recognized prompt
+								//generateImage(prompt);
+								sendSpeechMessage(prompt);
+							};
+							
+							recognition.onerror = function(event){
+								alert('Error occurred during speech recognition: ' + event.error);
+							};
+						})();">🎤 Speak</button>
 						<button style="margin-left: 10px; background-color: #4caf50; color: white; border: none; border-radius: 8px; padding: 10px 15px; font-size: 14px; cursor: pointer;" onclick="sendMessage()">
 							Send
 						</button>
@@ -705,6 +722,19 @@ justify-content: center;
 							// console.log(123123);
 							// return
 							const prompt = document.getElementById("chatbot-input-id").value;
+
+							getChatResponse(prompt);
+
+							document.getElementById("chatbot-container-id").innerHTML += `<div style="display: flex; justify-content: end;">
+							<p style="background-color: white; width: max-content; padding: 5px; border-radius: 8px;">
+								${prompt}
+							</p>
+						</div>`;
+						}
+
+						function sendSpeechMessage(prompt) {
+							// console.log(123123);
+							// return
 
 							getChatResponse(prompt);
 
